@@ -1,0 +1,11 @@
+/*-Memory Regions-*/
+define symbol ROM_start__   = 0x08000000;
+define symbol ROM_end__     = 0x080FFFFF;
+define symbol RAM_start__   = 0x20000000;
+define symbol RAM_end__     = 0x20017FFF;
+
+define memory mem with size = 4G;
+define region ROM_region   = mem:[from ROM_start__   to ROM_end__];
+define region RAM_region   = mem:[from RAM_start__   to RAM_end__];
+
+place at address mem:ROM_start__ { section .snifferbin };

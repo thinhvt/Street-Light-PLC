@@ -1,0 +1,115 @@
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[DebugChecksum]
+Checksum=-245391005
+[Exceptions]
+StopOnUncaught=_ 0
+StopOnThrow=_ 0
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=0
+[struct_types]
+Fmt0=APP_frame_t-address	4	0
+Fmt1=APP_userdata_t-address	4	0
+Fmt2=DEVICE_Data_t-LL_SM_BCAST_TX_TO__H	4	0
+Fmt3=DEVICE_Data_t-LL_SM_BCAST_TX_TO__L	4	0
+Fmt4=DEVICE_Data_t-LocalAddress	4	0
+Fmt5=DEVICE_Data_t-LocalGroup	4	0
+Fmt6=DEVICE_Data_t-WorkingMode	1	0
+[array_types]
+Fmt0=u16[16]	4	0
+Fmt1=uint16_t[16]	4	0
+Fmt2=uint8_t[100]	4	0
+Fmt3=uint8_t[3]	3	0
+[watch_formats]
+Fmt0={W}0:(i)*(1024)	4	0
+Fmt1={W}0:*(uint32_t *)(ImageAddress + (i*4))	4	0
+Fmt2={W}0:*(uint32_t *)(ImageAddress + i)	4	0
+Fmt3={W}0:*(uint32_t *)ImageAddress	4	0
+Fmt4={W}0:*FreeImageAddress	4	0
+Fmt5={W}0:*application_address	4	0
+Fmt6={W}0:APP_IO_config	1	0
+Fmt7={W}0:ApplicationOffset	4	0
+Fmt8={W}0:BinSize	3	0
+Fmt9={W}0:FirmwareSegment	4	0
+Fmt10={W}0:FreeImageAddress	4	0
+Fmt11={W}0:FreeImageAddress + (i *1024)	4	0
+Fmt12={W}0:FreeImageAddress + (i*1024)	4	0
+Fmt13={W}0:FreeImageAddress + ImgSegmentAddress	4	0
+Fmt14={W}0:FwSeg	4	0
+Fmt15={W}0:ImageAddress	4	0
+Fmt16={W}0:ImageAddress + (i*4)	4	0
+Fmt17={W}0:ImageAddress + i	4	0
+Fmt18={W}0:ImgSegmentAddress	4	0
+Fmt19={W}0:LL_Device.address	4	0
+Fmt20={W}0:LL_Device.frameparam	1	0
+Fmt21={W}0:LL_NTdata.frameparam	1	0
+Fmt22={W}0:LL_PendingFrame.destinationaddress	4	0
+Fmt23={W}0:LL_PendingFrame.senderaddress	4	0
+Fmt24={W}0:NewActiveImage	4	0
+Fmt25={W}0:SegemntWord	4	0
+Fmt26={W}0:Segment	4	0
+Fmt27={W}0:SegmentAddress	4	0
+Fmt28={W}0:StoredCS	4	0
+Fmt29={W}0:checksum	4	0
+Fmt30={W}0:clCRC	4	0
+Fmt31={W}0:crc	4	0
+Fmt32={W}0:i	3	0
+Fmt33={W}0:i*0x400	4	0
+Fmt34={W}0:nCRC	4	0
+Fmt35={W}0:pin_arr[i]	4	0
+Fmt36={W}0:vector_table_address	4	0
+Fmt37={W}0:vector_table_address + 4	4	0
+Fmt38={W}0:vector_table_address+4	4	0
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
+[Trace1]
+Enabled=0
+ShowSource=1
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Count=0
+[Aliases]
+A0=_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_l.c" ""
+A1=_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_n.c" ""
+Count=2
+SuppressDialog=1

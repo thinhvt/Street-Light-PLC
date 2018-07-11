@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\Project.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\Firmware - Bootloader\EWARM\Project.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>BuildAll</name>
+            <member>
+                <project>Project</project>
+                <configuration>BOOTLOADER</configuration>
+            </member>
+            <member>
+                <project>Project</project>
+                <configuration>GP PLM ST7540 [BL-APP]</configuration>
+            </member>
+        </batchDefinition>
+        <batchDefinition>
+            <name>Build 1</name>
+            <member>
+                <project>Project</project>
+                <configuration>GP PLM ST7540 [BL-APP]</configuration>
+            </member>
+        </batchDefinition>
+        <batchDefinition>
+            <name>Build 2</name>
+            <member>
+                <project>Project</project>
+                <configuration>BOOTLOADER</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
+</workspace>
