@@ -72,7 +72,8 @@ typedef enum
 #define APP_SER_GET_CMD_LEN     0x01    // Length of get commands (has no data apart the get group)
 
 /* Private variables ---------------------------------------------------------*/
-
+APP_SCHE_TIME_t schedules[30];
+uint8_t sche_len = 0;
 /* NETWORK STRUCTURES */
 APP_userdata_t  APP_UserData;                         // User application layer data structure
 APP_frame_t     APP_Frame;                            // Application layer data structure
@@ -92,13 +93,13 @@ bool            UpdateLEDon = FALSE;
 
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-
+bool            Check_Time_Start(void);
+bool            Check_Time_End(void);
 /* GENERAL FUNCTIONS */
 LL_WM_t         APP_InitStackWorkingMode(void);
 LL_settings_t   APP_InitStackDefaults(void);
 bool            APP_DeviceProgrammed(void);
 bool            APP_IsDeviceAddress(APP_frame_t *frm);
-u16             APP_GetWord(uint8_t *buffer);
 void            APP_SetWord(u16 wd, uint8_t *buffer);
 u16             APP_GetNextWord(uint8_t *buffer, uint8_t *pos);
 void            APP_SetNextWord(u16 wd, uint8_t *buffer, uint8_t *pos);
@@ -290,6 +291,59 @@ void APP_ApplicationInit(void)
     SYSTEM_RESET = TRUE;
     while(1);
   }
+}
+
+void APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len)
+{
+  uint8_t i;
+  sche_len = len;
+  for(i = 0; i < len; i++)
+  {
+    schedules[i].sche_id = user_schedules[i].sche_id;
+    schedules[i].time_start = user_schedules[i].time_start;
+    schedules[i].time_end = user_schedules[i].time_end;
+  }
+}
+void APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len)
+{
+  uint8_t i;
+  *len = sche_len;
+  for(i = 0; i < sche_len; i++)
+  {
+    user_schedules[i].sche_id = schedules[i].sche_id;
+    user_schedules[i].time_start = schedules[i].time_start;
+    user_schedules[i].time_end = schedules[i].time_end;
+  }
+}
+
+bool Check_Time_Start()
+{
+  uint8_t i;
+  uint8_t timebuf[3];
+  DH_GetSysTime(timebuf);
+  
+  for(i = 0; i < sche_len; i++)
+  {
+    if(schedules[i].time_start.hour == timebuf[0] &&
+       schedules[i].time_start.min == timebuf[1])
+      return TRUE;
+  }
+  return FALSE;
+}
+
+bool Check_Time_End()
+{
+  uint8_t i;
+  uint8_t timebuf[3];
+  DH_GetSysTime(timebuf);
+  
+  for(i = 0; i < sche_len; i++)
+  {
+    if(schedules[i].time_end.hour == timebuf[0] &&
+       schedules[i].time_end.min == timebuf[1])
+      return TRUE;
+  }
+  return FALSE;
 }
 
 /*******************************************************************************
@@ -1247,6 +1301,7 @@ void APP_StackUpdate(void)
   NL_Status_t nNStatus;
   APP_PLM_res_t plm_res;
   bool PLM_PROG_FRAME = FALSE;
+  uint8_t outbuff;
   
   switch (ApplicationStatus)
   {
@@ -1705,6 +1760,18 @@ void APP_StackUpdate(void)
       break;
   }
   
+  // Check schedule and set output value
+  if(Check_Time_Start() == TRUE)
+  {
+    outbuff = 0x01;
+    DH_SetOutputs(outbuff);
+  }
+  else if (Check_Time_End() == TRUE)
+  {
+    outbuff = 0x00;
+    DH_SetOutputs(outbuff);
+  }
+  
   /*******************************************************/
   /********** DATA LINK STACK ENGINE UPDATE **************/
   /*******************************************************/
@@ -2047,6 +2114,7 @@ APP_PLM_res_t APP_SER_PlmCommandExec(APP_frame_t *app_frame)
 
     // Update the system time
     case SERVICE_PLM_CLOCK_SET:
+    //case APP_SER_TIME_SYNC:
       APP_SYSTEM_TIME_UPDATED = TRUE;
       if (DH_SetSysTime(APP_SER_GetDataAddress(app_frame)))
         return APP_PLM_RES_DONE;

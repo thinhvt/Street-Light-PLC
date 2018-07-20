@@ -5,152 +5,79 @@
     <configuration>
         <name>BOOTLOADER</name>
         <outputs>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\stm32f10x_flash.__cstat.et</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\startup_stm32f10x_md.o</file>
-            <file>$PROJ_DIR$\..\system\stm32f10x_conf.h</file>
             <file>$PROJ_DIR$\BOOTLOADER\Obj\stm32f10x_flash.o</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Exe\BOOTLOADER.bin</file>
-            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
-            <file>$PROJ_DIR$\..\system\system_stm32f10x.h</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\startup_stm32f10x_hd.o</file>
-            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Full.h</file>
-            <file>$PROJ_DIR$\..\system\startup_stm32f10x_hd.s</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Exe\Project.out</file>
+            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
+            <file>$TOOLKIT_DIR$\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis\core_cm3.h</file>
             <file>$PROJ_DIR$\BOOTLOADER\Obj\system_stm32f10x.__cstat.et</file>
+            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$PROJ_DIR$\..\system\system_stm32f10x.h</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\main.__cstat.et</file>
+            <file>$PROJ_DIR$\..\system\startup_stm32f10x_hd.s</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\startup_stm32f10x_md.o</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\system_stm32f10x.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
             <file>$TOOLKIT_DIR$\lib\m7M_tl.a</file>
             <file>$PROJ_DIR$\BOOTLOADER\Obj\main.o</file>
-            <file>$TOOLKIT_DIR$\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis\core_cmInstr.h</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\main.__cstat.et</file>
             <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
-            <file>$PROJ_DIR$\stm32f10x_flash.icf</file>
+            <file>$TOOLKIT_DIR$\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis\core_cmFunc.h</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\stm32f10x_flash.__cstat.et</file>
+            <file>$PROJ_DIR$\..\system\stm32f10x_conf.h</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\main.pbi</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\system_stm32f10x.pbi</file>
             <file>$TOOLKIT_DIR$\inc\c\iccarm_builtin.h</file>
-            <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\stm32f10x_flash.pbi</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Exe\BOOTLOADER.bin</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\startup_stm32f10x_hd.o</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+            <file>$PROJ_DIR$\..\system\stm32f10x.h</file>
+            <file>$PROJ_DIR$\stm32f10x_flash.icf</file>
             <file>$PROJ_DIR$\BOOTLOADER\List\Project.map</file>
             <file>$PROJ_DIR$\..\system\stm32f10x_flash.h</file>
-            <file>$TOOLKIT_DIR$\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis\core_cmFunc.h</file>
-            <file>$PROJ_DIR$\..\system\stm32f10x.h</file>
-            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
-            <file>$PROJ_DIR$\..\system\system_stm32f10x.c</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\main.pbi</file>
+            <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
             <file>$PROJ_DIR$\..\system\stm32f10x_flash.c</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\system_stm32f10x.o</file>
-            <file>$TOOLKIT_DIR$\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis\core_cm3.h</file>
-            <file>$PROJ_DIR$\..\system\main.c</file>
             <file>$PROJ_DIR$\..\system\startup_stm32f10x_md.s</file>
-            <file>$TOOLKIT_DIR$\lib\dl7M_tln.a</file>
-            <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
-            <file>$PROJ_DIR$\BOOTLOADER\Obj\system_stm32f10x.pbi</file>
-            <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+            <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Full.h</file>
+            <file>$TOOLKIT_DIR$\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis\core_cmInstr.h</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Exe\Project.out</file>
+            <file>$PROJ_DIR$\BOOTLOADER\Obj\stm32f10x_flash.pbi</file>
+            <file>$PROJ_DIR$\..\system\system_stm32f10x.c</file>
+            <file>$PROJ_DIR$\..\system\main.c</file>
+            <file>$TOOLKIT_DIR$\lib\rt7M_tl.a</file>
         </outputs>
         <file>
             <name>$PROJ_DIR$\..\system\startup_stm32f10x_hd.s</name>
             <outputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 7</file>
-                </tool>
-            </outputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\BOOTLOADER\Exe\Project.out</name>
-            <outputs>
-                <tool>
-                    <name>ILINK</name>
                     <file> 23</file>
                 </tool>
-                <tool>
-                    <name>OBJCOPY</name>
-                    <file> 4</file>
-                </tool>
             </outputs>
-            <inputs>
-                <tool>
-                    <name>ILINK</name>
-                    <file> 19 15 1 3 31 5 27 14 35</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\system\system_stm32f10x.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 31</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 37</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
-                    <file> 13</file>
-                </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 26 32 18 8 38 36 10 9 16 21 20 25 6 2 24</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 32 2 36 10 18 25 21 6 16 38 9 26 8 20 24</file>
-                </tool>
-            </inputs>
         </file>
         <file>
             <name>$PROJ_DIR$\..\system\stm32f10x_flash.c</name>
             <outputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 3</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 22</file>
-                </tool>
-                <tool>
-                    <name>__cstat</name>
                     <file> 0</file>
                 </tool>
-            </outputs>
-            <inputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 24 26 32 18 8 38 36 10 9 16 21 20 25 6 2</file>
-                </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 32 2 21 20 26 18 25 8 38 6 16 24 36 10 9</file>
-                </tool>
-            </inputs>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\system\main.c</name>
-            <outputs>
-                <tool>
-                    <name>ICCARM</name>
-                    <file> 15</file>
-                </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 29</file>
+                    <file> 35</file>
                 </tool>
                 <tool>
                     <name>__cstat</name>
-                    <file> 17</file>
+                    <file> 15</file>
                 </tool>
             </outputs>
             <inputs>
                 <tool>
                     <name>ICCARM</name>
-                    <file> 26 32 18 8 38 36 10 9 16 21 20 25 6 2 24</file>
+                    <file> 28 25 2 13 19 4 18 32 24 33 10 21 14 5 16</file>
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 36 32 2 10 18 25 21 24 6 16 38 9 26 8 20</file>
+                    <file> 2 16 10 21 25 13 14 19 4 5 33 28 18 32 24</file>
                 </tool>
             </inputs>
         </file>
@@ -159,16 +86,89 @@
             <outputs>
                 <tool>
                     <name>AARM</name>
-                    <file> 1</file>
+                    <file> 8</file>
                 </tool>
             </outputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\BOOTLOADER\Exe\Project.out</name>
+            <outputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 27</file>
+                </tool>
+                <tool>
+                    <name>OBJCOPY</name>
+                    <file> 22</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ILINK</name>
+                    <file> 26 12 8 0 9 29 38 11 1</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\system\system_stm32f10x.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 9</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 20</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 3</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 25 2 13 19 4 18 32 24 33 10 21 14 5 16 28</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 2 16 18 32 13 14 10 5 33 4 24 25 19 21 28</file>
+                </tool>
+            </inputs>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\system\main.c</name>
+            <outputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 12</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 17</file>
+                </tool>
+                <tool>
+                    <name>__cstat</name>
+                    <file> 6</file>
+                </tool>
+            </outputs>
+            <inputs>
+                <tool>
+                    <name>ICCARM</name>
+                    <file> 25 2 13 19 4 18 32 24 33 10 21 14 5 16 28</file>
+                </tool>
+                <tool>
+                    <name>BICOMP</name>
+                    <file> 18 2 16 32 13 14 10 28 5 33 4 24 25 19 21</file>
+                </tool>
+            </inputs>
         </file>
         <file>
             <name>[ROOT_NODE]</name>
             <outputs>
                 <tool>
                     <name>ILINK</name>
-                    <file> 23 12</file>
+                    <file> 27 34</file>
                 </tool>
             </outputs>
         </file>

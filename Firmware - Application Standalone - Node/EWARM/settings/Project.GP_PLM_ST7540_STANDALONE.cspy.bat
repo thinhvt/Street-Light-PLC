@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.general.xcl" --backend -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.general.xcl" --backend -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.general.xcl" "--debug_file=%~1" --backend -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\settings\Project.GP_PLM_ST7540_STANDALONE.driver.xcl" 
 
 @echo off 
 :end

@@ -159,6 +159,20 @@ typedef struct
   bool      framerejected;
 }APP_SER_FLAGS_t;
 
+typedef struct
+{
+  uint8_t   hour;
+  uint8_t   min;
+  uint8_t   sec;
+}APP_TIME_t;
+
+typedef struct
+{
+  uint8_t      sche_id;
+  APP_TIME_t   time_start;
+  APP_TIME_t   time_end;
+}APP_SCHE_TIME_t;
+
 /* Exported variables --------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
@@ -173,6 +187,9 @@ bool            APP_DeviceAddressed(APP_userdata_t *frm);
 void            APP_GetLocalAddress(uint16_t *group, uint32_t *address);
 bool            APP_GetTransitFrameFlags(APP_SER_FLAGS_t *flags);
 bool            APP_SoftwareResetRequested(void);
+u16             APP_GetWord(uint8_t *buffer);
+void            APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len);
+void            APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len);
 
 /* NETWORK */
 APP_userflag_t  APP_ReceiveUserData(APP_userdata_t *userdata);

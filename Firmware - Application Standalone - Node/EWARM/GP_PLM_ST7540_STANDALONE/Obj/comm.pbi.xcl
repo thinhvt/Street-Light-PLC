@@ -1,15 +1,15 @@
-"C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\src\comm.c"
+"C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\src\comm.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\..\system
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\..\system
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\..\inc
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\..\inc
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\..\PLMstack\inc
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\..\PLMstack\inc
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\EWARM\..\STM32F10x_StdPeriph_Driver\inc
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\EWARM\..\STM32F10x_StdPeriph_Driver\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis
 -I
@@ -17,13 +17,13 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\system
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\system
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\inc
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\inc
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\PLMstack\inc
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\PLMstack\inc
 -I
-C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Application Standalone\STM32F10x_StdPeriph_Driver\inc
+C:\Users\Regera\Documents\Street Light PLM\Firmware - Application Standalone - Node\STM32F10x_StdPeriph_Driver\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\src\flashloader\NXP\FlashQN9080\chip_qn908x\cmsis
 -D__CHAR_BITS__=8

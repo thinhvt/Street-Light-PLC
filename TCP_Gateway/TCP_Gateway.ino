@@ -4,15 +4,18 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 
 int8_t answer;
 char aux_str[50];
-char ip_data[30] = "21.77.0.0.0.1";
-bool isConnected = false;
-uint8_t notify[] = {10, 'C', 'o', 'n', 'n', 'e', 'c', 't', 'e', 'd'};
+uint8_t server_connected;
+String response;
+char backStr[30];
+
 void setup() {
   pinMode(1, INPUT);
   pinMode(2, OUTPUT);
   pinMode(10, INPUT);
   pinMode(11, OUTPUT);
   pinMode(13, OUTPUT);
+
+  server_connected = 1;
   Serial.begin(57600);
   mySerial.begin(9600);
   Serial.println("Starting...");
@@ -23,10 +26,7 @@ void setup() {
   connect_server();
 }
 void loop() {
-  String response;
-  char backStr[30];
-
-  if (!isConnected)
+  if (server_connected > 0)
   {
     connect_server();
   }
@@ -40,8 +40,9 @@ void loop() {
 
       response = Serial.readString();
       response.trim();
-      if (response.equals("CLOSE"))
+      if (response.equals("CLOSED"))
       {
+        Serial.println("Server closed connection! Trying to re-connect...");
         connect_server();
       }
       else
@@ -60,9 +61,9 @@ void loop() {
         }
 
         mySerial.write((byte*)&buff, sizeof(buff));
-        while (mySerial.available() > 0) mySerial.read();   // Clean the input buffer
-        response = "";
+        mySerial.flush();
       }
+      response = "";
     }
 
     else if (mySerial.available() > 0)
@@ -70,20 +71,21 @@ void loop() {
       uint8_t back_index = 0;
       char b[4];
       backStr[0] = '\0';
+
       while (mySerial.available() > 0)
       {
         uint8_t c = mySerial.read();
         String(c).toCharArray(b, 4);
-        if(backStr[0] == '\0')
+        if (backStr[0] == '\0')
           sprintf(backStr, "%s%s", backStr, b);
         else
           sprintf(backStr, "%s%s%s", backStr, "|", b);
         b[0] = '\0';
       }
+      backStr[strlen(backStr)] = '\0'; //Terminate string
 
-      backStr[strlen(backStr)] = '\0';
-      // Sends some data to the TCP socket
       int back_len = strlen(backStr);
+      // Sends data to the TCP socket
       if (back_len > 0)
       {
         sprintf(aux_str, "AT+CIPSEND=%d", back_len);
@@ -146,14 +148,18 @@ void connect_server()
           while (sendATcommand2("AT+CIPSTATUS", "IP STATUS", "", 500)  == 0 );
           Serial.println("Openning TCP");
           // Opens a TCP socket
-          if (sendATcommand2("AT+CIPSTART=\"TCP\",\"103.53.231.126\",\"10000\"",
+          if (sendATcommand2("AT+CIPSTART=\"TCP\",\"103.53.231.126\",\"777\"",
                              "CONNECT OK", "CONNECT FAIL", 30000) == 1)
           {
-            Serial.println("Connected");
-            isConnected = true;
+            server_connected = 0;
             delay(1000);
+            sprintf(aux_str, "AT+CIPSEND=%d", 18);
+            if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
+            {
+              sendATcommand2("13|21|77?Connected", "SEND OK", "ERROR", 10000);
+            }
 
-            mySerial.write((byte*)&notify, sizeof(notify));
+            //mySerial.write((byte*)&con_str, sizeof(con_str));
             while (Serial.available() > 0) Serial.read();   // Clean the input buffer
             while (mySerial.available() > 0) mySerial.read();   // Clean the input buffer
           }

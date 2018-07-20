@@ -76,6 +76,8 @@ typedef enum
 /* Private variables ---------------------------------------------------------*/
 bool isBroadcasted = FALSE;
 APP_frame_t APP_Broadcast_Frame;
+APP_SCHE_TIME_t schedules[30];
+uint8_t sche_len = 0;
 /* NETWORK STRUCTURES */
 APP_userdata_t  APP_UserData;                         // User application layer data structure
 APP_frame_t     APP_Frame;                            // Application layer data structure
@@ -95,15 +97,13 @@ bool            UpdateLEDon = FALSE;
 
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-//void            SIM800_SetAtCommand(char*);
-//bool            SIM800_Send_AtCommand(char*, char*, char*, uint16_t);
-//uint8_t         SIM800_ReceiveAnswer(char*, char*);
+bool            Check_Time_Start(void);
+bool            Check_Time_End(void);
 /* GENERAL FUNCTIONS */
 LL_WM_t         APP_InitStackWorkingMode(void);
 LL_settings_t   APP_InitStackDefaults(void);
 bool            APP_DeviceProgrammed(void);
 bool            APP_IsDeviceAddress(APP_frame_t *frm);
-u16             APP_GetWord(uint8_t *buffer);
 void            APP_SetWord(u16 wd, uint8_t *buffer);
 u16             APP_GetNextWord(uint8_t *buffer, uint8_t *pos);
 void            APP_SetNextWord(u16 wd, uint8_t *buffer, uint8_t *pos);
@@ -114,6 +114,7 @@ APP_PLM_res_t   APP_TransferResult(APP_frame_t *app_frame);
 APP_ERROR_t     APP_GetNetworkError(NL_ERR_t err);
 u16             APP_CalcCRC16(uint8_t *buf, uint8_t nLen);
 void            APP_UpdateRejectFrameStatistics(void);
+bool            APP_Send_Connect_Frame(u16 tout_ms);
 
 /* COMMUNICATION FUNCTIONS */
 bool            APP_COMM_FrameReceived(APP_frame_t *frame);
@@ -297,58 +298,58 @@ void APP_ApplicationInit(void)
   }
 }
 
-//void APP_GPRS_Init()
-//{
-//  char msg[4];
-//  sprintf((char*)msg, "%s%X%X", "AT", 0x0D, 0x0A);
-//  bool isTransmitted = SIM800_Send_AtCommand(msg, "OK", "OK", 2000);
-//}
-//
-//bool SIM800_Send_AtCommand(char* AtCommand, char* Expected_Answer1, char* Expected_Answer2, uint16_t tout_ms)
-//{
-//  u32 tstmp;
-//  bool bres = TRUE;
-//  
-//  tstmp = DH_Timestamp();
-//  SIM800_SetAtCommand(AtCommand);
-//   
-//  // Start frame transmission
-//  bres = COMM_StartTransmission();
-//  
-//  while (!COMM_FrameTransmitted() && bres)
-//  {
-//    if (DH_DelayElapsed(tstmp, tout_ms))
-//      bres = FALSE;
-//  }
-//  
-//  COMM_EnableReceiver();
-//  return bres;
-//}
-//
-//void SIM800_SetAtCommand(char* AtCommand)
-//{
-//  uint8_t *combuf;
-//  
-//  combuf = COMM_GetBufferPointer();
-//  memcpy(combuf, (uint8_t*)AtCommand, strlen(AtCommand)+1);
-//}
-//
-//uint8_t SIM800_ReceiveAnswer(char* Expected_Answer1, char* Expected_Answer2)
-//{
-//  uint8_t *combuf;
-//  uint8_t answer = 0;
-//  
-//  combuf =  COMM_GetBufferPointer();
-//  uint8_t c1 = combuf[0];
-//  uint8_t c2 = combuf[1];
-//  
-//  if(memcmp(Expected_Answer1, combuf, strlen(Expected_Answer1)) == 0)
-//    answer = 1;
-//  else if(memcmp(Expected_Answer2, combuf, strlen(Expected_Answer2)) == 0)
-//    answer = 2;
-//  return answer;
-//}
+void APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len)
+{
+  uint8_t i;
+  sche_len = len;
+  for(i = 0; i < len; i++)
+  {
+    schedules[i].sche_id = user_schedules[i].sche_id;
+    schedules[i].time_start = user_schedules[i].time_start;
+    schedules[i].time_end = user_schedules[i].time_end;
+  }
+}
+void APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len)
+{
+  uint8_t i;
+  *len = sche_len;
+  for(i = 0; i < sche_len; i++)
+  {
+    user_schedules[i].sche_id = schedules[i].sche_id;
+    user_schedules[i].time_start = schedules[i].time_start;
+    user_schedules[i].time_end = schedules[i].time_end;
+  }
+}
 
+bool Check_Time_Start()
+{
+  uint8_t i;
+  uint8_t timebuf[3];
+  DH_GetSysTime(timebuf);
+  
+  for(i = 0; i < sche_len; i++)
+  {
+    if(schedules[i].time_start.hour == timebuf[0] &&
+       schedules[i].time_start.min == timebuf[1])
+      return TRUE;
+  }
+  return FALSE;
+}
+
+bool Check_Time_End()
+{
+  uint8_t i;
+  uint8_t timebuf[3];
+  DH_GetSysTime(timebuf);
+  
+  for(i = 0; i < sche_len; i++)
+  {
+    if(schedules[i].time_end.hour == timebuf[0] &&
+       schedules[i].time_end.min == timebuf[1])
+      return TRUE;
+  }
+  return FALSE;
+}
 /*******************************************************************************
 * Function Name  : APP_GetWord
 * Description    : Returns a word (2 bytes) from a given buffer
@@ -465,26 +466,59 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
   uint8_t *combuf;
   uint8_t i;
   u16 crc;
+  uint8_t timebuf[3];
     
   combuf =  COMM_GetBufferPointer();
-  if(memcmp(combuf+1, "Connected", sizeof(combuf)) == 0)
+  if(strncmp((char*)combuf+4, "Connected", 9) == 0)
   {
+    for(i = 1; i < 4; i++)
+      timebuf[i-1] = combuf[i];
+    DH_SetSysTime(timebuf);
+    
     DH_ShowLED(A_LED_ERROR, A_LED_FLASH); 
     DH_ShowLED(A_LED_DATA, A_LED_FLASH); 
     DH_ShowLED(A_LED_BOTH, A_LED_FLASH); 
-    
-    //Set ping frame to server
+    //Send ping frame
     frame->len = 0;
     frame->type = APP_PING_FRAME;
     
     // Transmission via COMM 
     APP_UserCommStatus = USER_DATA_IDLE;
-    if (APP_COMM_SendFrame(&APP_Frame, APP_USART_SEND_TIMEOUT, TRUE))
+    if (APP_COMM_SendFrame(frame, APP_USART_SEND_TIMEOUT, TRUE))
+    {
+      APP_SER_ResetTimeSyncroTimer();
+      APP_SER_SetTimeSynchroFrame();
+      ApplicationStatus = APP_CONN_REQUEST;
+      // Load network data structure
+      APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
       DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
+      COMM_EnableReceiver();
+    }
     else
       DH_ShowLED(A_LED_ERROR, A_LED_FLASH);
+    
     return FALSE;
   }
+//  else if(strncmp((char*)combuf+4, "Systime", 7) == 0)
+//  {
+//    for(i = 1; i < 4; i++)
+//      timebuf[i-1] = combuf[i];
+//    DH_SetSysTime(timebuf);
+//    
+//    DH_ShowLED(A_LED_ERROR, A_LED_FLASH); 
+//    DH_ShowLED(A_LED_DATA, A_LED_FLASH); 
+//    DH_ShowLED(A_LED_BOTH, A_LED_FLASH); 
+//    
+//    APP_SER_ResetTimeSyncroTimer();
+//    APP_SER_SetTimeSynchroFrame();
+//    ApplicationStatus = APP_CONN_REQUEST;
+//    // Load network data structure
+//    APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
+//    DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
+//    COMM_EnableReceiver();
+//      
+//    return FALSE;
+//  }
   else {
     i = combuf[0] - 2; // Entire len
     crc = ((u16)(combuf[i] << 8)) | combuf[i+1];
@@ -500,6 +534,36 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
     }
   }
   return FALSE;
+}
+
+bool APP_Send_Connect_Frame(u16 tout_ms)
+{
+  uint8_t *combuf;
+  u16 grp;
+  u32 addr;
+  u32 tstmp;
+  bool bres = TRUE;
+  
+  combuf = COMM_GetBufferPointer();
+  NL_GetLocalAddress(&grp, &addr);
+  
+  APP_SetWord(grp, combuf + 1);
+  combuf[3] = '\0';
+  combuf[0] = strlen((char*) combuf);
+  
+  tstmp = DH_Timestamp();
+
+  // Start frame transmission
+  bres = COMM_StartTransmission();
+  
+  while (!COMM_FrameTransmitted() && bres)
+  {
+    if (DH_DelayElapsed(tstmp, tout_ms))
+      bres = FALSE;
+  }
+  
+  COMM_EnableReceiver();
+  return bres;
 }
 
 /*******************************************************************************
@@ -1336,6 +1400,7 @@ void APP_StackUpdate(void)
   NL_Status_t nNStatus;
   APP_PLM_res_t plm_res;
   bool PLM_PROG_FRAME = FALSE;
+  uint8_t outbuff;
   
   switch (ApplicationStatus)
   {
@@ -1809,6 +1874,17 @@ void APP_StackUpdate(void)
       break;
   }
   
+  // Check schedule and set output value
+  if(Check_Time_Start() == TRUE)
+  {
+    outbuff = 0x01;
+    DH_SetOutputs(outbuff);
+  }
+  else if (Check_Time_End() == TRUE)
+  {
+    outbuff = 0x00;
+    DH_SetOutputs(outbuff);
+  }
   /*******************************************************/
   /********** DATA LINK STACK ENGINE UPDATE **************/
   /*******************************************************/
@@ -2151,6 +2227,7 @@ APP_PLM_res_t APP_SER_PlmCommandExec(APP_frame_t *app_frame)
 
     // Update the system time
     case SERVICE_PLM_CLOCK_SET:
+    case APP_SER_TIME_SYNC:
       APP_SYSTEM_TIME_UPDATED = TRUE;
       if (DH_SetSysTime(APP_SER_GetDataAddress(app_frame)))
         return APP_PLM_RES_DONE;

@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.general.xcl" --backend -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.general.xcl" --backend -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.general.xcl" --debug_file=$debugfile --backend -f "C:\Program Files (x86)\STMicroelectronics\STEVAL-IHP005V1\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\Regera\Documents\Street Light PLM\Firmware - Bootloader\EWARM\settings\Project.BOOTLOADER.driver.xcl" 
 }

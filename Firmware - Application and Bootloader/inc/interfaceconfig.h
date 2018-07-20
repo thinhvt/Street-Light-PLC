@@ -61,7 +61,7 @@
 #define IO_8_PIN                      7     // GPIO_Pin_7
 
 /* Default I/O pin definition (1 = output) */
-#define IO_DEFAULT_CONFIG             0x00  // All IO's as inputs 
+#define IO_DEFAULT_CONFIG             0x01  // All IO's as inputs 
 #define IO_DEFAULT_OUT_VAL            0x00  // All outputs cleared
 
 /*----------------------------------------------------------------------------*/
@@ -158,8 +158,8 @@
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
 /* WORKING MODE DEFINITION */
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
-#define DEVICE_DEFAULT_GROUP            0xffff
-#define DEVICE_DEFAULT_ADDRESS          0xffffffff
+#define DEVICE_DEFAULT_GROUP            0x154D
+#define DEVICE_DEFAULT_ADDRESS          0x00000002
 
 
 /* Comment the definition for disable the equivalent feature */

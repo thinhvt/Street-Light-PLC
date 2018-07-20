@@ -221,7 +221,7 @@
 #define DEFAULT_LL_MAX_ATTEMPT          (u8)(5)       // Max attempts if no activity is detected
 #define DEFAULT_MAX_RPT_ATTEMPT         (u8)(0)       // Max repetition attempts (for processed ID, 0 = disabled)
 #define DEFAULT_NTW_P_ACTIVITY_TO       (u32)(20000)  // 2s: Timeout for network inactivity (must be > than NTW_P_ACK_RX_TO)
-#define DEFAULT_DEVICE_TIME_SYNC        (u16)(0)      // Time update sync frame inteval (0 = disabled)
+#define DEFAULT_DEVICE_TIME_SYNC        (u16)(7200)      // Time update sync frame inteval (0 = disabled)
 
 /*-------------------------------------------------------------------------------------------------------------------------------------------*/
 /* INTERRUPT PRIORITIES - <!> WARNING - MODIFY WITH CARE */
