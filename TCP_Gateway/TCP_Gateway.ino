@@ -28,7 +28,9 @@ void setup() {
 void loop() {
   if (server_connected > 0)
   {
+    sendATcommand2("AT+CIPSHUT", "SHUT OK", "ERROR", 10000);
     connect_server();
+    delay(1000);
   }
   else
   {
@@ -42,7 +44,9 @@ void loop() {
       response.trim();
       if (response.equals("CLOSED"))
       {
+        server_connected = 1;
         Serial.println("Server closed connection! Trying to re-connect...");
+        sendATcommand2("AT+CIPSHUT", "SHUT OK", "ERROR", 10000);
         connect_server();
       }
       else

@@ -174,6 +174,8 @@ typedef struct
 }APP_SCHE_TIME_t;
 
 /* Exported variables --------------------------------------------------------*/
+extern APP_SCHE_TIME_t schedules[30];
+extern uint8_t sche_len;
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
@@ -188,8 +190,8 @@ void            APP_GetLocalAddress(uint16_t *group, uint32_t *address);
 bool            APP_GetTransitFrameFlags(APP_SER_FLAGS_t *flags);
 bool            APP_SoftwareResetRequested(void);
 u16             APP_GetWord(uint8_t *buffer);
-void            APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len);
-void            APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len);
+//void            APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len);
+//void            APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len);
 
 /* NETWORK */
 APP_userflag_t  APP_ReceiveUserData(APP_userdata_t *userdata);

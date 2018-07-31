@@ -12,7 +12,7 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <DebugChecksum>
-        <Checksum>1640917601</Checksum>
+        <Checksum>265578916</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -84,7 +84,7 @@
     <array_types>
         <Fmt0>u16[16]	4	0</Fmt0>
         <Fmt1>uint16_t[16]	4	0</Fmt1>
-        <Fmt2>uint8_t[100]	4	0</Fmt2>
+        <Fmt2>uint8_t[100]	3	0</Fmt2>
         <Fmt3>uint8_t[3]	3	0</Fmt3>
     </array_types>
     <watch_formats>
@@ -186,6 +186,12 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -195,6 +201,14 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
+    <Aliases>
+        <A0>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_l.c" ""</A0>
+        <A1>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_n.c" ""</A1>
+        <A2>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_l.c" ""</A2>
+        <A3>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_n.c" ""</A3>
+        <Count>4</Count>
+        <SuppressDialog>1</SuppressDialog>
+    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>1</Mode>
@@ -213,19 +227,4 @@
         <Probe0>I0</Probe0>
         <ProbeSetup0>2 1 1 2 0 0</ProbeSetup0>
     </PowerProbe>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\src\application.c}.471.13" 0 0 1 "" 0 "" 0</Bp0>
-        <Count>1</Count>
-    </Breakpoints2>
-    <Aliases>
-        <A0>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_l.c" ""</A0>
-        <A1>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_n.c" ""</A1>
-        <A2>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_l.c" ""</A2>
-        <A3>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_n.c" ""</A3>
-        <Count>4</Count>
-        <SuppressDialog>1</SuppressDialog>
-    </Aliases>
 </settings>

@@ -74,6 +74,7 @@ typedef enum
 /* Private variables ---------------------------------------------------------*/
 APP_SCHE_TIME_t schedules[30];
 uint8_t sche_len = 0;
+bool sche_start = FALSE;
 /* NETWORK STRUCTURES */
 APP_userdata_t  APP_UserData;                         // User application layer data structure
 APP_frame_t     APP_Frame;                            // Application layer data structure
@@ -293,28 +294,28 @@ void APP_ApplicationInit(void)
   }
 }
 
-void APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len)
-{
-  uint8_t i;
-  sche_len = len;
-  for(i = 0; i < len; i++)
-  {
-    schedules[i].sche_id = user_schedules[i].sche_id;
-    schedules[i].time_start = user_schedules[i].time_start;
-    schedules[i].time_end = user_schedules[i].time_end;
-  }
-}
-void APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len)
-{
-  uint8_t i;
-  *len = sche_len;
-  for(i = 0; i < sche_len; i++)
-  {
-    user_schedules[i].sche_id = schedules[i].sche_id;
-    user_schedules[i].time_start = schedules[i].time_start;
-    user_schedules[i].time_end = schedules[i].time_end;
-  }
-}
+//void APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len)
+//{
+//  uint8_t i;
+//  sche_len = len;
+//  for(i = 0; i < len; i++)
+//  {
+//    schedules[i].sche_id = user_schedules[i].sche_id;
+//    schedules[i].time_start = user_schedules[i].time_start;
+//    schedules[i].time_end = user_schedules[i].time_end;
+//  }
+//}
+//void APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len)
+//{
+//  uint8_t i;
+//  *len = sche_len;
+//  for(i = 0; i < sche_len; i++)
+//  {
+//    user_schedules[i].sche_id = schedules[i].sche_id;
+//    user_schedules[i].time_start = schedules[i].time_start;
+//    user_schedules[i].time_end = schedules[i].time_end;
+//  }
+//}
 
 bool Check_Time_Start()
 {
@@ -569,8 +570,14 @@ uint16_t APP_SER_GetFwUpdAddress(APP_frame_t *app_frame)
 *******************************************************************************/
 void APP_SER_GetDongleInputs(APP_frame_t *app_frame)
 {
+  u16 grp;
+  u32 addr;
+  APP_GetLocalAddress(&grp, &addr);
+  
   app_frame->buffer[1] = DH_GetInputs();
-  app_frame->len = 2;
+  APP_SetWord((u16)(addr >> 16), app_frame->buffer + 2);
+  APP_SetWord((u16)addr, app_frame->buffer + 4);   
+  app_frame->len = 6;
 }
 
 /*******************************************************************************
@@ -1037,8 +1044,8 @@ bool APP_PLM_SetNetworkData(APP_frame_t *adata, NL_Data_t *pldata)
   }
   
   // Check if the broadcast flag have to be set
-  if (adata->type & APP_BROADCAST)
-    pldata->frametype |= APP_BROADCAST;
+//  if (adata->type & APP_BROADCAST)
+//    pldata->frametype |= APP_BROADCAST;
 
   // Load address  
   pldata->group = adata->group;
@@ -1761,15 +1768,17 @@ void APP_StackUpdate(void)
   }
   
   // Check schedule and set output value
-  if(Check_Time_Start() == TRUE)
+  if(sche_start == FALSE && Check_Time_Start() == TRUE)
   {
     outbuff = 0x01;
     DH_SetOutputs(outbuff);
+    sche_start = TRUE;
   }
-  else if (Check_Time_End() == TRUE)
+  else if (sche_start == TRUE && Check_Time_End() == TRUE)
   {
     outbuff = 0x00;
     DH_SetOutputs(outbuff);
+    sche_start = FALSE;
   }
   
   /*******************************************************/
@@ -2114,7 +2123,7 @@ APP_PLM_res_t APP_SER_PlmCommandExec(APP_frame_t *app_frame)
 
     // Update the system time
     case SERVICE_PLM_CLOCK_SET:
-    //case APP_SER_TIME_SYNC:
+    case APP_SER_TIME_SYNC:
       APP_SYSTEM_TIME_UPDATED = TRUE;
       if (DH_SetSysTime(APP_SER_GetDataAddress(app_frame)))
         return APP_PLM_RES_DONE;
@@ -2167,6 +2176,10 @@ APP_PLM_res_t APP_SER_PlmCommandExec(APP_frame_t *app_frame)
       
     // Set the value of the output pins
     case SERVICE_OUTPUTS_SET:
+      if(app_frame->buffer[1] == 0x01)
+        sche_start = TRUE;
+      else
+        sche_start = FALSE;
       DH_SetOutputs(*(APP_SER_GetDataAddress(app_frame)));
       return APP_PLM_RES_DONE;  
       

@@ -68,6 +68,7 @@ typedef enum
 #define APP_USART_SEND_TIMEOUT  1000    // 1s
 #define APP_INFO_REQUEST_DELAY  100     // 0.1s
 #define COMM_RX_FRAME_TIMEOUT   300     // 300 ms
+#define DELAY_SYSTIME_SYNC      3       //3s
 
 /* SERVICE COMMANDS */
 #define APP_SER_TIME_SYNC       0x79    // 'y'
@@ -78,6 +79,7 @@ bool isBroadcasted = FALSE;
 APP_frame_t APP_Broadcast_Frame;
 APP_SCHE_TIME_t schedules[30];
 uint8_t sche_len = 0;
+bool sche_start = FALSE;
 /* NETWORK STRUCTURES */
 APP_userdata_t  APP_UserData;                         // User application layer data structure
 APP_frame_t     APP_Frame;                            // Application layer data structure
@@ -298,28 +300,28 @@ void APP_ApplicationInit(void)
   }
 }
 
-void APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len)
-{
-  uint8_t i;
-  sche_len = len;
-  for(i = 0; i < len; i++)
-  {
-    schedules[i].sche_id = user_schedules[i].sche_id;
-    schedules[i].time_start = user_schedules[i].time_start;
-    schedules[i].time_end = user_schedules[i].time_end;
-  }
-}
-void APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len)
-{
-  uint8_t i;
-  *len = sche_len;
-  for(i = 0; i < sche_len; i++)
-  {
-    user_schedules[i].sche_id = schedules[i].sche_id;
-    user_schedules[i].time_start = schedules[i].time_start;
-    user_schedules[i].time_end = schedules[i].time_end;
-  }
-}
+//void APP_Get_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t len)
+//{
+//  uint8_t i;
+//  sche_len = len;
+//  for(i = 0; i < len; i++)
+//  {
+//    schedules[i].sche_id = user_schedules[i].sche_id;
+//    schedules[i].time_start = user_schedules[i].time_start;
+//    schedules[i].time_end = user_schedules[i].time_end;
+//  }
+//}
+//void APP_Set_Schedule(APP_SCHE_TIME_t user_schedules[], uint8_t *len)
+//{
+//  uint8_t i;
+//  *len = sche_len;
+//  for(i = 0; i < sche_len; i++)
+//  {
+//    user_schedules[i].sche_id = schedules[i].sche_id;
+//    user_schedules[i].time_start = schedules[i].time_start;
+//    user_schedules[i].time_end = schedules[i].time_end;
+//  }
+//}
 
 bool Check_Time_Start()
 {
@@ -474,10 +476,9 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
     for(i = 1; i < 4; i++)
       timebuf[i-1] = combuf[i];
     DH_SetSysTime(timebuf);
-    
-    DH_ShowLED(A_LED_ERROR, A_LED_FLASH); 
-    DH_ShowLED(A_LED_DATA, A_LED_FLASH); 
-    DH_ShowLED(A_LED_BOTH, A_LED_FLASH); 
+
+    DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
+    DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
     //Send ping frame
     frame->len = 0;
     frame->type = APP_PING_FRAME;
@@ -491,34 +492,31 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
       ApplicationStatus = APP_CONN_REQUEST;
       // Load network data structure
       APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
-      DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
+      DH_ShowLED(A_LED_DATA, A_LED_ON);
       COMM_EnableReceiver();
+      if(timebuf[2] < DELAY_SYSTIME_SYNC)
+      {
+        timebuf[2] = timebuf[2] + 59 - DELAY_SYSTIME_SYNC;
+        if(timebuf[1] < 1)
+        {
+          timebuf[1] = 59;
+          if(timebuf[0] < 1)
+            timebuf[0] = 23;
+          else
+            timebuf[0] -= 1;
+        }
+        else
+          timebuf[1] -= 1;
+      }
+      else
+        timebuf[2] -= DELAY_SYSTIME_SYNC;
+      DH_SetSysTime(timebuf);
     }
     else
       DH_ShowLED(A_LED_ERROR, A_LED_FLASH);
     
     return FALSE;
   }
-//  else if(strncmp((char*)combuf+4, "Systime", 7) == 0)
-//  {
-//    for(i = 1; i < 4; i++)
-//      timebuf[i-1] = combuf[i];
-//    DH_SetSysTime(timebuf);
-//    
-//    DH_ShowLED(A_LED_ERROR, A_LED_FLASH); 
-//    DH_ShowLED(A_LED_DATA, A_LED_FLASH); 
-//    DH_ShowLED(A_LED_BOTH, A_LED_FLASH); 
-//    
-//    APP_SER_ResetTimeSyncroTimer();
-//    APP_SER_SetTimeSynchroFrame();
-//    ApplicationStatus = APP_CONN_REQUEST;
-//    // Load network data structure
-//    APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
-//    DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
-//    COMM_EnableReceiver();
-//      
-//    return FALSE;
-//  }
   else {
     i = combuf[0] - 2; // Entire len
     crc = ((u16)(combuf[i] << 8)) | combuf[i+1];
@@ -656,6 +654,7 @@ uint16_t APP_SER_GetFwUpdAddress(APP_frame_t *app_frame)
 *******************************************************************************/
 void APP_SER_GetDongleInputs(APP_frame_t *app_frame)
 {
+  app_frame->type = APP_SERVICE_FRAME;
   app_frame->buffer[1] = DH_GetInputs();
   app_frame->len = 2;
 }
@@ -1875,15 +1874,17 @@ void APP_StackUpdate(void)
   }
   
   // Check schedule and set output value
-  if(Check_Time_Start() == TRUE)
+  if(sche_start == FALSE && Check_Time_Start() == TRUE)
   {
     outbuff = 0x01;
     DH_SetOutputs(outbuff);
+    sche_start = TRUE;
   }
-  else if (Check_Time_End() == TRUE)
+  else if (sche_start == TRUE && Check_Time_End() == TRUE)
   {
     outbuff = 0x00;
     DH_SetOutputs(outbuff);
+    sche_start = FALSE;
   }
   /*******************************************************/
   /********** DATA LINK STACK ENGINE UPDATE **************/
@@ -2109,6 +2110,10 @@ bool APP_SER_CommCommandExec(APP_frame_t *app_frame)
       
     // Set the value of the output pins
     case SERVICE_OUTPUTS_SET:
+      if(app_frame->buffer[1] == 0x01)
+        sche_start = TRUE;
+      else
+        sche_start = FALSE;
       DH_SetOutputs(*(APP_SER_GetDataAddress(app_frame)));
       return (APP_COMM_SendACKFrame((uint8_t)(APP_SERVICE_FRAME), (uint8_t)(SERVICE_OUTPUTS_SET), APP_USART_SEND_TIMEOUT));
     

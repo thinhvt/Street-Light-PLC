@@ -27,8 +27,8 @@
 APP_userdata_t  USER_Data;
 uint16_t grp;
 uint32_t addr;
-APP_SCHE_TIME_t user_schedule[30];
-uint8_t len = 0;
+//APP_SCHE_TIME_t user_schedule[30];
+//uint8_t len = 0;
 /* Private macro -------------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 bool    Check_Address(void);
@@ -80,38 +80,38 @@ void USER_Program(void)
               time_end.sec = USER_Data.data[6];
               pos = Exist_Schedule_Pos();
               is_addressed = Check_Address();
-              APP_Set_Schedule(user_schedule, &len);
+              //APP_Set_Schedule(user_schedule, &len);
               
               if(is_addressed == TRUE && pos > -1) // Update existing schedule
               {
-                user_schedule[pos].time_start = time_start;
-                user_schedule[pos].time_end = time_end;
+                schedules[pos].time_start = time_start;
+                schedules[pos].time_end = time_end;
                 
                 DH_ShowLED(A_LED_DATA, A_LED_FLASH);
               }
               else if (is_addressed == FALSE && pos > -1) // Remove existing schedule from this node
               {
                 int i;
-                for(i = pos; i < len-1; i++)
-                  user_schedule[i] = user_schedule[i+1];
-                len--;
+                for(i = pos; i < sche_len-1; i++)
+                  schedules[i] = schedules[i+1];
+                sche_len--;
                 
                 DH_ShowLED(A_LED_DATA, A_LED_FLASH);
               }
               else if(is_addressed == TRUE && pos == -1) // Add schedule to this node
               {
-                APP_Set_Schedule(user_schedule, &len);
-                user_schedule[len].sche_id = sche_id;
-                user_schedule[len].time_start = time_start;
-                user_schedule[len].time_end = time_end;
-                len++;
+                //APP_Set_Schedule(user_schedule, &len);
+                schedules[sche_len].sche_id = sche_id;
+                schedules[sche_len].time_start = time_start;
+                schedules[sche_len].time_end = time_end;
+                sche_len++;
                 
                 DH_ShowLED(A_LED_DATA, A_LED_FLASH);
               }
               else
                 DH_ShowLED(A_LED_ERROR, A_LED_FLASH);
               
-              APP_Get_Schedule(user_schedule, len);
+              //APP_Get_Schedule(user_schedule, len);
             }
           }
           else if (USER_Data.type == APP_ERROR_FRAME)
@@ -167,12 +167,12 @@ int Exist_Schedule_Pos()
 {
   uint8_t i;
   int pos = -1;
-  uint8_t new_sche_id = USER_Data.data[1];
-  APP_Set_Schedule(user_schedule, &len);
+  uint8_t new_sche_id = USER_Data.data[0];
+  //APP_Set_Schedule(user_schedule, &len);
   
-  for(i = 0; i < len; i++)
+  for(i = 0; i < sche_len; i++)
   {
-    if(new_sche_id == user_schedule[i].sche_id)
+    if(new_sche_id == schedules[i].sche_id)
       pos = i;
   }
   return pos;
