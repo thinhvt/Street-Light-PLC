@@ -12,7 +12,7 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <DebugChecksum>
-        <Checksum>265578916</Checksum>
+        <Checksum>1392223573</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -186,12 +186,6 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Count>0</Count>
-    </Breakpoints2>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -201,14 +195,6 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
-    <Aliases>
-        <A0>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_l.c" ""</A0>
-        <A1>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_n.c" ""</A1>
-        <A2>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_l.c" ""</A2>
-        <A3>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_n.c" ""</A3>
-        <Count>4</Count>
-        <SuppressDialog>1</SuppressDialog>
-    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>1</Mode>
@@ -227,4 +213,18 @@
         <Probe0>I0</Probe0>
         <ProbeSetup0>2 1 1 2 0 0</ProbeSetup0>
     </PowerProbe>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
+    <Aliases>
+        <A0>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_l.c" ""</A0>
+        <A1>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware - Application\PLMstack\src\stk_n.c" ""</A1>
+        <A2>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_l.c" ""</A2>
+        <A3>_ "C:\Users\claudio ruggieri\Desktop\VSS\A2A 2.0\Firmware\PLMstack45\src\stk_n.c" ""</A3>
+        <Count>4</Count>
+        <SuppressDialog>1</SuppressDialog>
+    </Aliases>
 </settings>

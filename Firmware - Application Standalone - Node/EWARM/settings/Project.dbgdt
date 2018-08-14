@@ -1378,7 +1378,7 @@
                 <expressions>
                     <item>USER_SM</item>
                     <item>res</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

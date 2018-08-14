@@ -5,8 +5,10 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 int8_t answer;
 char aux_str[50];
 uint8_t server_connected;
+uint8_t con_str[6] = {6, 'C', 'n', 'n', 't', 'd'};
 String response;
 char backStr[30];
+uint8_t notice_plm;
 
 void setup() {
   pinMode(1, INPUT);
@@ -16,6 +18,7 @@ void setup() {
   pinMode(13, OUTPUT);
 
   server_connected = 1;
+  notice_plm = 1;
   Serial.begin(57600);
   mySerial.begin(9600);
   Serial.println("Starting...");
@@ -86,6 +89,13 @@ void loop() {
           sprintf(backStr, "%s%s%s", backStr, "|", b);
         b[0] = '\0';
       }
+
+      if(notice_plm == 0)
+      {
+        sprintf(backStr, "%s%s", backStr, "?Connected");
+        notice_plm = 1;
+      }
+      
       backStr[strlen(backStr)] = '\0'; //Terminate string
 
       int back_len = strlen(backStr);
@@ -152,18 +162,20 @@ void connect_server()
           while (sendATcommand2("AT+CIPSTATUS", "IP STATUS", "", 500)  == 0 );
           Serial.println("Openning TCP");
           // Opens a TCP socket
-          if (sendATcommand2("AT+CIPSTART=\"TCP\",\"103.53.231.126\",\"777\"",
+          if (sendATcommand2("AT+CIPSTART=\"TCP\",\"103.53.231.126\",\"747\"",
                              "CONNECT OK", "CONNECT FAIL", 30000) == 1)
           {
             server_connected = 0;
+            notice_plm = 0;
             delay(1000);
-            sprintf(aux_str, "AT+CIPSEND=%d", 18);
-            if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
-            {
-              sendATcommand2("13|21|77?Connected", "SEND OK", "ERROR", 10000);
-            }
+//            sprintf(aux_str, "AT+CIPSEND=%d", 18);
+//            if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
+//            {
+//              sendATcommand2("13|21|77?Connected", "SEND OK", "ERROR", 10000);
+//            }
 
-            //mySerial.write((byte*)&con_str, sizeof(con_str));
+            mySerial.write((byte*)&con_str, sizeof(con_str));
+            mySerial.flush();
             while (Serial.available() > 0) Serial.read();   // Clean the input buffer
             while (mySerial.available() > 0) mySerial.read();   // Clean the input buffer
           }

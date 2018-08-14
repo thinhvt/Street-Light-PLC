@@ -116,7 +116,6 @@ APP_PLM_res_t   APP_TransferResult(APP_frame_t *app_frame);
 APP_ERROR_t     APP_GetNetworkError(NL_ERR_t err);
 u16             APP_CalcCRC16(uint8_t *buf, uint8_t nLen);
 void            APP_UpdateRejectFrameStatistics(void);
-bool            APP_Send_Connect_Frame(u16 tout_ms);
 
 /* COMMUNICATION FUNCTIONS */
 bool            APP_COMM_FrameReceived(APP_frame_t *frame);
@@ -126,6 +125,8 @@ bool            APP_COMM_SendFrame(APP_frame_t *frame, u16 tout_ms, bool useloca
 bool            APP_COMM_SendErrorFrame(APP_ERROR_t errcode, u16 tout);
 bool            APP_COMM_SendACKFrame(uint8_t ackGroup, uint8_t cmdEcho, u16 tout);
 void            APP_COMM_SetBroadcastFrame(APP_frame_t *app_f, APP_frame_t *broad_f);
+void            APP_Set_Connect_Frame(void);
+bool            APP_Send_Connect_Frame(u16 tout_ms);
 /* PROGRAMMING FUNCTIONS */
 bool            APP_PROG_FrameArrived(void);
 APP_PROG_CMD_t  APP_PROG_GetCommand(APP_frame_t *app_frame);
@@ -471,7 +472,14 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
   uint8_t timebuf[3];
     
   combuf =  COMM_GetBufferPointer();
-  if(strncmp((char*)combuf+4, "Connected", 9) == 0)
+  if(strncmp((char*)combuf+1, "Cnntd", 5) == 0) 
+  {
+    if(APP_Send_Connect_Frame(APP_USART_SEND_TIMEOUT))
+      DH_ShowLED(A_LED_DATA, A_LED_FLASH);
+    else
+      DH_ShowLED(A_LED_ERROR, A_LED_FLASH);
+  }
+  else if(strncmp((char*)combuf+4, "Connected", 9) == 0)
   {
     for(i = 1; i < 4; i++)
       timebuf[i-1] = combuf[i];
@@ -479,45 +487,46 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
 
     DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
     DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
-    //Send ping frame
-    frame->len = 0;
-    frame->type = APP_PING_FRAME;
-    
-    // Transmission via COMM 
-    APP_UserCommStatus = USER_DATA_IDLE;
-    if (APP_COMM_SendFrame(frame, APP_USART_SEND_TIMEOUT, TRUE))
+//    //Send ping frame
+//    frame->len = 0;
+//    frame->type = APP_PING_FRAME;
+//    
+//    // Transmission via COMM 
+//    APP_UserCommStatus = USER_DATA_IDLE;
+//    if (APP_COMM_SendFrame(frame, APP_USART_SEND_TIMEOUT, TRUE))
+//    {
+    APP_SER_ResetTimeSyncroTimer();
+    APP_SER_SetTimeSynchroFrame();
+    ApplicationStatus = APP_CONN_REQUEST;
+    // Load network data structure
+    APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
+    DH_ShowLED(A_LED_DATA, A_LED_ON);
+    COMM_EnableReceiver();
+    if(timebuf[2] < DELAY_SYSTIME_SYNC)
     {
-      APP_SER_ResetTimeSyncroTimer();
-      APP_SER_SetTimeSynchroFrame();
-      ApplicationStatus = APP_CONN_REQUEST;
-      // Load network data structure
-      APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
-      DH_ShowLED(A_LED_DATA, A_LED_ON);
-      COMM_EnableReceiver();
-      if(timebuf[2] < DELAY_SYSTIME_SYNC)
+      timebuf[2] = timebuf[2] + 59 - DELAY_SYSTIME_SYNC;
+      if(timebuf[1] < 1)
       {
-        timebuf[2] = timebuf[2] + 59 - DELAY_SYSTIME_SYNC;
-        if(timebuf[1] < 1)
-        {
-          timebuf[1] = 59;
-          if(timebuf[0] < 1)
-            timebuf[0] = 23;
-          else
-            timebuf[0] -= 1;
-        }
+        timebuf[1] = 59;
+        if(timebuf[0] < 1)
+          timebuf[0] = 23;
         else
-          timebuf[1] -= 1;
+          timebuf[0] -= 1;
       }
       else
-        timebuf[2] -= DELAY_SYSTIME_SYNC;
-      DH_SetSysTime(timebuf);
+        timebuf[1] -= 1;
     }
     else
-      DH_ShowLED(A_LED_ERROR, A_LED_FLASH);
+      timebuf[2] -= DELAY_SYSTIME_SYNC;
+    DH_SetSysTime(timebuf);
+//  }
+//    else
+//      DH_ShowLED(A_LED_ERROR, A_LED_FLASH);
     
     return FALSE;
   }
-  else {
+  else 
+  {
     i = combuf[0] - 2; // Entire len
     crc = ((u16)(combuf[i] << 8)) | combuf[i+1];
     if (crc == APP_CalcCRC16(combuf, i))
@@ -534,21 +543,28 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
   return FALSE;
 }
 
-bool APP_Send_Connect_Frame(u16 tout_ms)
+void APP_Set_Connect_Frame()
 {
   uint8_t *combuf;
-  u16 grp;
+  u16 grp, crc;
   u32 addr;
-  u32 tstmp;
-  bool bres = TRUE;
   
   combuf = COMM_GetBufferPointer();
   NL_GetLocalAddress(&grp, &addr);
   
+  combuf[0] = 5;
   APP_SetWord(grp, combuf + 1);
-  combuf[3] = '\0';
-  combuf[0] = strlen((char*) combuf);
+  crc = APP_CalcCRC16(combuf, 3);
+  combuf[3] = (uint8_t)(crc >> 8);
+  combuf[4] = (uint8_t)crc;
+}
+
+bool APP_Send_Connect_Frame(u16 tout_ms)
+{
+  u32 tstmp;
+  bool bres = TRUE;
   
+  APP_Set_Connect_Frame();
   tstmp = DH_Timestamp();
 
   // Start frame transmission
