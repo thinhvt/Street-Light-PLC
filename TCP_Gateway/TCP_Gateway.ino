@@ -6,8 +6,9 @@ int8_t answer;
 char aux_str[50];
 uint8_t server_connected;
 uint8_t con_str[6] = {6, 'C', 'n', 'n', 't', 'd'};
+char chk_conn[11] = "Connecting";
 String response;
-char backStr[30];
+char backStr[100];
 uint8_t notice_plm;
 
 void setup() {
@@ -22,7 +23,7 @@ void setup() {
   Serial.begin(57600);
   mySerial.begin(9600);
   Serial.println("Starting...");
-  sendATcommand2("AT+CIPSHUT", "SHUT OK", "ERROR", 10000);
+  sendATcommand2("AT+CIPSHUT", "OK", "ERROR", 10000);
   power_on();
   delay(3000);
   Serial.println("Connecting to the network...");
@@ -31,7 +32,7 @@ void setup() {
 void loop() {
   if (server_connected > 0)
   {
-    sendATcommand2("AT+CIPSHUT", "SHUT OK", "ERROR", 10000);
+    sendATcommand2("AT+CIPSHUT", "OK", "ERROR", 10000);
     connect_server();
     delay(1000);
   }
@@ -49,8 +50,18 @@ void loop() {
       {
         server_connected = 1;
         Serial.println("Server closed connection! Trying to re-connect...");
-        sendATcommand2("AT+CIPSHUT", "SHUT OK", "ERROR", 10000);
+        sendATcommand2("AT+CIPSHUT", "OK", "ERROR", 10000);
         connect_server();
+      }
+      else if(response.equals("ChkConnection"))
+      {
+        int conn_len = strlen(chk_conn);
+        sprintf(aux_str, "AT+CIPSEND=%d", conn_len);
+        if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
+        {
+          sendATcommand2(chk_conn, "SEND OK", "ERROR", 10000);
+        }
+        while (Serial.available() > 0) Serial.read();   // Clean the input buffer
       }
       else
       {
@@ -95,18 +106,18 @@ void loop() {
         sprintf(backStr, "%s%s", backStr, "?Connected");
         notice_plm = 1;
       }
-      
       backStr[strlen(backStr)] = '\0'; //Terminate string
 
       int back_len = strlen(backStr);
       // Sends data to the TCP socket
-      if (back_len > 0)
+      if (back_len > 0 && strcmp(backStr, "255") != 0)
       {
         sprintf(aux_str, "AT+CIPSEND=%d", back_len);
         if (sendATcommand2(aux_str, ">", "ERROR", 10000) == 1)
         {
           sendATcommand2(backStr, "SEND OK", "ERROR", 10000);
         }
+        while (Serial.available() > 0) Serial.read();   // Clean the input buffer
       }
     }
   }
@@ -162,7 +173,7 @@ void connect_server()
           while (sendATcommand2("AT+CIPSTATUS", "IP STATUS", "", 500)  == 0 );
           Serial.println("Openning TCP");
           // Opens a TCP socket
-          if (sendATcommand2("AT+CIPSTART=\"TCP\",\"103.53.231.126\",\"747\"",
+          if (sendATcommand2("AT+CIPSTART=\"TCP\",\"103.53.231.126\",\"777\"",
                              "CONNECT OK", "CONNECT FAIL", 30000) == 1)
           {
             server_connected = 0;

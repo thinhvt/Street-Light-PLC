@@ -1623,6 +1623,7 @@ void APP_StackUpdate(void)
                 APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
                 // Flash service LED 
                 DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
+                COMM_ACK_ENABLED = FALSE;
                 break;
                 
               case APP_PLM_RES_USER_OVERRUN:

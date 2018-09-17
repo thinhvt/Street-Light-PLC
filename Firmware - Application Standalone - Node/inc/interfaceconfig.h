@@ -164,7 +164,7 @@
 
 /* Comment the definition for disable the equivalent feature */
 #define DEVICE_USE_RTC                  // Use the RTC
-//#define DEVICE_USE_EXTOSC_32KHZ         // Use the external 32.769 KHz oscillator for RTC functions
+#define DEVICE_USE_EXTOSC_32KHZ         // Use the external 32.769 KHz oscillator for RTC functions
 //#define DEVICE_USE_WATCHDOG             // Enable the watchdog 
 //#define DEVICE_LSI_TIM_MEASURE          // Enable the internal oscillator calibration (if external oscillator is not used)
 

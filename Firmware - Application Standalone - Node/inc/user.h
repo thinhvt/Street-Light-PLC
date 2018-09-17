@@ -30,7 +30,6 @@
 /* Exported variables --------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void USER_Program(void);
-void sendUart(void);
 #endif /* __USER_H */
 
 /******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

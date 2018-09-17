@@ -68,7 +68,7 @@ typedef enum
 #define APP_USART_SEND_TIMEOUT  1000    // 1s
 #define APP_INFO_REQUEST_DELAY  100     // 0.1s
 #define COMM_RX_FRAME_TIMEOUT   300     // 300 ms
-#define DELAY_SYSTIME_SYNC      3       //3s
+#define DELAY_SYSTIME_SYNC      4       //3s
 
 /* SERVICE COMMANDS */
 #define APP_SER_TIME_SYNC       0x79    // 'y'
@@ -487,14 +487,7 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
 
     DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
     DH_ShowLED(A_LED_BOTH, A_LED_FLASH);
-//    //Send ping frame
-//    frame->len = 0;
-//    frame->type = APP_PING_FRAME;
-//    
-//    // Transmission via COMM 
-//    APP_UserCommStatus = USER_DATA_IDLE;
-//    if (APP_COMM_SendFrame(frame, APP_USART_SEND_TIMEOUT, TRUE))
-//    {
+
     APP_SER_ResetTimeSyncroTimer();
     APP_SER_SetTimeSynchroFrame();
     ApplicationStatus = APP_CONN_REQUEST;
@@ -502,26 +495,23 @@ bool APP_COMM_GetFrame(APP_frame_t *frame)
     APP_PLM_SetNetworkData(&APP_Frame, &APP_NW_Data);
     DH_ShowLED(A_LED_DATA, A_LED_ON);
     COMM_EnableReceiver();
-    if(timebuf[2] < DELAY_SYSTIME_SYNC)
-    {
-      timebuf[2] = timebuf[2] + 59 - DELAY_SYSTIME_SYNC;
-      if(timebuf[1] < 1)
-      {
-        timebuf[1] = 59;
-        if(timebuf[0] < 1)
-          timebuf[0] = 23;
-        else
-          timebuf[0] -= 1;
-      }
-      else
-        timebuf[1] -= 1;
-    }
-    else
-      timebuf[2] -= DELAY_SYSTIME_SYNC;
-    DH_SetSysTime(timebuf);
-//  }
+//    if(timebuf[2] < DELAY_SYSTIME_SYNC)
+//    {
+//      timebuf[2] = timebuf[2] + 59 - DELAY_SYSTIME_SYNC;
+//      if(timebuf[1] < 1)
+//      {
+//        timebuf[1] = 59;
+//        if(timebuf[0] < 1)
+//          timebuf[0] = 23;
+//        else
+//          timebuf[0] -= 1;
+//      }
+//      else
+//        timebuf[1] -= 1;
+//    }
 //    else
-//      DH_ShowLED(A_LED_ERROR, A_LED_FLASH);
+//      timebuf[2] -= DELAY_SYSTIME_SYNC;
+    DH_SetSysTime(timebuf);
     
     return FALSE;
   }
@@ -1628,6 +1618,10 @@ void APP_StackUpdate(void)
             if(isBroadcasted)
             {
               ApplicationStatus = APP_CONN_REQUEST;
+              if((APP_Frame.type & (~APP_BROADCAST)) == APP_DATA_FRAME)
+                COMM_ACK_ENABLED = TRUE;
+              else
+                COMM_ACK_ENABLED = FALSE;
               // Load network data structure
               APP_PLM_SetNetworkData(&APP_Broadcast_Frame, &APP_NW_Data);
               // Switxh ON data led
